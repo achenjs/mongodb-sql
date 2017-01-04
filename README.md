@@ -48,11 +48,18 @@ db.[collection].update({field: value},{$addToSet:{field: [value1,value2,...]}})
 db.[collection].update({field: value}, {$pop:{field: -1}})
 # $pull:从数组field内删除一个等于value值
 db.[collection].update({field: value}, {$pull:{field: value}})
-# $pullAll:同pull，删除数组field内所有等于value值
-db.[collection].update({field: value},{$pullAll:{field: value}})
+# <del>$pullAll:同pull，删除数组field内所有等于value值<del>
+db.[collection].update({field: value},{pullAll:{field: value}})
 # remove({field: value}):删除所有value记录
 db.[collection].remove({field: value})
 # 删除表
 db.[collection].drop()
 
+# 索引的种类
+1._id索引 2.单键索引  3.多键索引  4.复合索引  5.过期索引  6.全文索引  7.地理位置索引
+
 # 索引查询
+# getIndexes():查看当前索引
+db.[collection].getIndexes()
+# ensureIndex({field: 1}):创建field索引并且正向排序，-1为逆向排序
+db.[collection].ensureIndex({field: -1})
