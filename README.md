@@ -1,7 +1,5 @@
 # mongodb-sql
 用来记录mongodb常用的sql语句
-
-
 # 启动db
 /bin/mongod -f conf/mongodb.conf
 # 客户端进入db
@@ -17,28 +15,44 @@ db
 # 在表中插入数据
 db.[collection].insert({field:value})			
 # 查看所有的表
-show collections	
-# 返回所有记录
+1.show tables
+2.show collections	
+# find():返回所有记录
 db.[collection].find()		
 # 通过js循环插入多条记录
 for(i=3;i<=100;i++)db.[collection].insert({"":""})		
 # db自动生成的一个全局字段，值可以自己设置，但是不能重复否则错误 如：insert(_id:1)
 _id			
-# 返回表中记录的数量
+# count():返回表中记录的数量
 db.[collection].find().count()	
 # skip 过滤前3条记录，limit 限制返回记录数量，sort 以什么字段排序
 db.[collection].find().skip(3).limit(2).sort({"":""})		
-# 更新记录，至少接收2个参数，如果有第三个参数并且为true则表示会执行insert({field:value})
-db.[collection].update({x:1},{x:2},[true])			
-# 对一个数字类型字段做 +=或者-= 操作
+# update({},{},[]):更新记录，至少接收2个参数，如果有第三个参数并且为true则表示会执行insert({field:value})
+db.[collection].update({x:1},{x:2},[true])
+# update()为了防止误操作，默认只能修改第一条记录，如果想一次修改多条记录，则需要加入第四个参数为true并且使用$set修饰符
+db.[collection].update({x:1},{$set:{x:2}},false,true)   =>  将修改find({x:1})所有记录的value值
+# $inc:对一个数字类型字段做 +=或者-= 操作
 db.[collection].update({field: value},{$inc:{field: value}})	
-# 重设某个字段的值
+# $set:重设某个字段的值
 db.[collection].update({field: value},{$set:{field: value}})	
-# 删除某个字段
+# $unset:删除某个字段
 db.[collection].update({field: value],{$unset:{field: 1}})	
-# 把value追加到field里面去，field一定要是数组类型才行，如果field不存在，会新增一个数组类型加进去。
-db.[collection].update({field: value},{$push:{field: value}})   
+# $push:把value追加到field里面去，field一定要是数组类型才行，如果field不存在，会新增一个数组类型加进去。
+db.[collection].update({field: value},{$push:{field: value}})   
+# $pushAll:一次可以追加多个值到一个数组字段内。
+db.[collection].update({field: value},{$pushAll:{field:['','',...]}})
+# $addToSet:增加一个值到数组内，而且只有当这个值不在数组内才增加
+db.[collection].update({field: value},{$addToSet:{field: {$each: [value1,value2,...]}}}) or 
+db.[collection].update({field: value},{$addToSet:{field: [value1,value2,...]}})
+# $pop:删除数组内的一个值，只能删除一个值，value只能为-1或者1,  -1删除第一个，1删除最后一个
+db.[collection].update({field: value}, {$pop:{field: -1}})
+# $pull:从数组field内删除一个等于value值
+db.[collection].update({field: value}, {$pull:{field: value}})
+# $pullAll:同pull，删除数组field内所有等于value值
+db.[collection].update({field: value},{$pullAll:{field: value}})
+# remove({field: value}):删除所有value记录
+db.[collection].remove({field: value})
+# 删除表
+db.[collection].drop()
 
-
-
-
+# 索引查询
