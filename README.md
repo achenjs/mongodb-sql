@@ -15,8 +15,9 @@ db
 # 在表中插入数据
 db.[collection].insert({field:value})			
 # 查看所有的表
-1.show tables
-2.show collections	
+show tables
+# 查看当前数据库中的包含的集合
+show collections	
 # find():返回所有记录
 db.[collection].find()		
 # 通过js循环插入多条记录
@@ -62,4 +63,6 @@ db.[collection].drop()
 # getIndexes():查看当前索引
 db.[collection].getIndexes()
 # ensureIndex({field: 1}):创建field索引并且正向排序，-1为逆向排序
-db.[collection].ensureIndex({field: -1})
+db.[collection].ensureIndex({field: -1})  // 3.2版本后 ensureIndex 改为 createIndex
+# expireAfterSeconds:设置过期时间，单位为秒
+db.test.ensureIndex({time:1},{expireAfterSeconds:10})   //mongo有最小过期时间为60秒，并且有误差
