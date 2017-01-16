@@ -73,7 +73,28 @@ db.[collection].createIndex("article":"text") //先创建全文索引 <br>
 db.[collection].find({$text:{$search:value}}) //找到所有值包含有value的记录 <br>
 db.[collection].find({$text:{$search:"value -value1"}}) //找到必须有value,可以没有value1的记录 <br>
 db.[collection].find({$text:{$search:"\"value\" \"value1\""}})  //找到必须包含value,value2的记录 <br>
-全文索引使用限制<br>
+# 全文索引使用限制
 1.每次查询，只能指定一个$text查询<br>
 2.$text查询不能出现在$nor查询中<br>
 3.查询中如果包含了$text,hint不再起作用<br>
+
+# 索引的属性
+1.名字,name指定:<br>
+db.[collection].createIndex({"key":"value"},{"name": "aa"})  //自定义索引的name为aa <br>
+2.唯一性,unique指定:<br>
+db.[collection].createIndex({},{unique:true/false})<br>  // 指定唯一索引后，不能插入相同的记录
+3.稀疏性，sparse指定:<br>
+db.[collection].createIndex({},{sparse:true/false})<br>   // 强制使用稀疏索引时，只是在包含稀疏索引的集合中查找
+4.是否定时删除，expireAfterSeconds指定:<br>
+TTL,过期索引<br>
+
+# 地理位置索引
+概念：将一些点的位置存储在MongoDB中，创建索引后，可以按照位置来查找其他店 <br>
+子分类：2d索引,用于存储和查找平面上的点。 2dsphere索引，用于存储和查找球面上的点<br>
+查找方式:<br>
+1.查找距离某个点一定距离内的点<br>
+2.查找包含在某个区域内的点<br>                  //   例如打车软件，外卖配送服务等等
+
+# 2d索引
+创建方式：db.[collection].createIndex({x:"2d"})<br>
+位置表示方式：经纬度【经度，纬度】<br>取值范围：经度【-180,180】 纬度【-90,90】
