@@ -97,4 +97,67 @@ TTL,过期索引<br>
 
 # 2d索引
 创建方式：db.[collection].createIndex({x:"2d"})<br>
-位置表示方式：经纬度【经度，纬度】<br>取值范围：经度【-180,180】 纬度【-90,90】
+位置表示方式：经纬度【经度，纬度】<br>取值范围：经度【-180,180】 纬度【-90,90】<br>
+db.[collection].insert({x:[180,100]})<br>
+<br>
+查询方式：<br>
+(1)$near查询：查询距离某个点最近的点.<br>
+db.[collection].find({x:{$near:[1,1]}})                    会返回100个距离最近的记录 <br>
+db.[collection].find({x:{$near:[1,1],$maxDistance:10}})    筛选出范围10以内的记录 <br>
+<br>
+(2)$geoWithin查询：查询某个形状内的点.<br>
+形状的表示：<br>
+1.$box：矩形，使用
+{$box:[[x1,y1],[x2,y2]]} 表示 <br>
+db.[collection].find({x:{$geoWithin:{$box:[1,1],[2,2]}}})
+2.$center：圆形，使用
+${$center:[[x1,y1],r]} 表示 x1,y1代表圆心的位置，r代表半径<br>
+3.$polygon：多边形，使用
+{$polygon:[[x1,y1],[x2,y2],[x3,y3]]} 表示<br>
+<br>
+geoNear查询：<br>
+geoNear使用runCommand命令进行使用，常用使用如下：
+db.runCommand({
+  geoNear:<collection>,
+  near:[x,y],
+  minDistance:
+  maxDistance:
+  num:              // 限制返回记录个数
+})
+# 2dsphere索引：
+球面地理位置索引概念：球面地理位置索引<br>
+创建方式：db.[collection].createIndex({x:"2dsphere"})<br>
+位置表示方式：<br>
+GeoJSON：描述一个点，一条直线，多边形等形状。<br>
+格式：<br>
+{type:"",coordinates:[coordinates]} <br>
+查询方式与2d索引查询方式类似，支持$minDistance与$maxDistance
+<br>
+# 索引构建情况分析
+如何评判当前索引构建情况：<br>
+1.mongostat工具介绍.        //bin目录下的  mongostat可以查看mongodb的状态    <br>
+2.profile集合介绍.          <br>      
+3.日志介绍.<br>
+4.explain分析.    db.[collection].find({}).explain('executionStats') 可以用来查看find有没有用到索引查询等信息 <br>
+http://tieba.baidu.com/p/3941931560  详细说明地址<br>
+<br><br>
+
+# Mongodb安全概览
+1.最安全的是物理隔离：不现实 <br>
+2.网络隔离其次 <br>
+3.防火墙再其次 <br>
+4.用户名密码在最后 <br>
+
+# 使用用户名密码登录  配置mongo.conf
+1.auth=true <br>
+2.keyfile开启
+
+# Mongodb创建用户
+1.创建语法：createUser(2.6之前为addUser)
+2.{
+  user: "name",
+  pwd: "password",
+  customData: {},
+  roles: [{role: "角色类型", db: "database"}]
+}
+3.角色类型：内建类型(read,readWrite,dbAdmin,dbOwner,userAdmin)
