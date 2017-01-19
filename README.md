@@ -139,8 +139,7 @@ GeoJSON：描述一个点，一条直线，多边形等形状。<br>
 2.profile集合介绍.          <br>      
 3.日志介绍.<br>
 4.explain分析.    db.[collection].find({}).explain('executionStats') 可以用来查看find有没有用到索引查询等信息 <br>
-http://tieba.baidu.com/p/3941931560  详细说明地址<br>
-<br><br>
+http://tieba.baidu.com/p/3941931560  详细说明地址
 
 # Mongodb安全概览
 1.最安全的是物理隔离：不现实 <br>
@@ -153,11 +152,17 @@ http://tieba.baidu.com/p/3941931560  详细说明地址<br>
 2.keyfile开启
 
 # Mongodb创建用户
-1.创建语法：createUser(2.6之前为addUser)
+1.创建语法：createUser(2.6之前为addUser) <br>
 2.{
   user: "name",
   pwd: "password",
   customData: {},
   roles: [{role: "角色类型", db: "database"}]
-}
-3.角色类型：内建类型(read,readWrite,dbAdmin,dbOwner,userAdmin)
+} <br>
+3.角色类型：内建类型(read,readWrite,dbAdmin,dbOwner,userAdmin...) http://blog.csdn.net/chen88358323/article/details/50206651 <br>
+
+# Mongodb用户角色详解
+1.数据库角色(read,readWrite,dbAdmin,dbOwner,userAdmin) <br>
+2.集群角色(clusterAdmin, clusterManager...) <br>
+3.备份角色(backup, restore...) <br>
+4.其他特殊权限(DBAdminAnyDatabase...)
